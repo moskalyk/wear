@@ -36,3 +36,118 @@
     transform: rotate(360deg);
   }
 }
+
+.landing {
+  width: 15%
+}
+
+.title {
+  color: purple;
+  font-family: 'Arcade';
+  margin-top: -27px;
+}
+
+.sub-title {
+  font-family: 'Arcade';
+}
+
+.footer {
+  position: fixed !important;
+  bottom: 20px !important;
+}
+
+.grid-container {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+  /* margin-left: 20p; */
+  text-align: center;
+}
+
+.grid-item {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(to bottom, white, black, black 40%, white 60%);
+  padding-bottom: 80%; /* Maintain square shape */
+}
+
+.item {
+  width: 20vw;
+  position: absolute;
+}
+
+img {
+  padding: 20px;
+}
+
+.item:hover {
+  box-shadow: 5px 5px 20px rgb(216, 216, 216);
+  cursor: grabbing;
+}
+
+.grab {
+  cursor: grabbing;
+}
+
+.hand {
+  cursor: grab;
+}
+
+.footer {
+  font-family: 'Arcade';
+}
+
+.circle {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 20px;
+  position: fixed;
+  top: 20px;
+  cursor: pointer;
+}
+
+.circle-line {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
+  right: 20px;
+  position: fixed;
+  top: 100px;
+  cursor: pointer;
+}
+
+.avi-grad {
+  font-size: 30px;
+  margin-left: 0px;
+  margin-top: 9px;
+}
+
+.emoji {
+  font-size: 30px;
+  margin-left: -5px;
+}
+
+.logo {
+  margin-left: 6px;
+  margin-top: 5px;
+}
+
+.checkout {
+  bottom: 20px;
+  position: fixed;
+  right: 20px;
+  border: 1px solid grey;
+  padding: 25px;
+  cursor: pointer;
+}
