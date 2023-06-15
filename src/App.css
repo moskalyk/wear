@@ -56,6 +56,10 @@
   bottom: 20px !important;
 }
 
+.footer-collection {
+  cursor: pointer;
+}
+
 .grid-container {
   padding: 30px;
   display: grid;
@@ -150,4 +154,26 @@ img {
   border: 1px solid grey;
   padding: 25px;
   cursor: pointer;
+}
+
+textarea {
+  width: 300px;
+  border: 1px solid white;
+  padding: 10px;
+}
+
+.contact {
+  padding: 10px;
+}
+
+.scrollable-window {
+  height: 300px; /* Set the height of the scrollable window */
+  overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+.white-hr-div {
+  background-color: white;
+  height: 0.1px; /* Set the desired height of the horizontal rule */
+  margin: auto; /* Adjust the margin as needed */
+  width: 400px
 }
