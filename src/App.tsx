@@ -20,6 +20,10 @@ import img11 from './imgs/11.png'
 
 import * as openpgp from 'openpgp';
 
+import noise from './static_noise.gif'
+import blackout from './black_out.png'
+import whiteout from './whiteout.png'
+
 import { Box, Card, Text, Button, useTheme, Breadcrumbs, GradientAvatar} from '@0xsequence/design-system'
 
 import hanger from './hanger.png'
@@ -47,26 +51,97 @@ const Footer = (props: any) => {
 }
 
 let do_ = true; // singing
+const collectiblesOld: any = [img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11]
+const enabled = [0,1,2,2,0,2,0,1,0,2,1,0] // 0=seen,1=friendly,2=noise 
 const Collection = (props: any) => {
   const [items, setItems] = useState([])
   const [selected, setSelected] = useState<any>(null)
-  const collectibles: any = [img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11];
+  const [collectibles, setCollectibles]: any = useState<any>([]);
   const [checkedOut, setCheckedOut] = useState<any>(null)
+  const [init, setInit] = useState<any>(false)
+  const [hovering, setHovering] = useState<any>(false)
+  // const collectibles: any = [img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11];
+
+  useEffect(() => {
+    setCollectibles(collectiblesOld.map((collectible: any, i: any) => {
+      if(enabled[i] == 1) return collectible
+      else if(enabled[i] == 2) return whiteout
+      else return blackout
+    }))
+  }, [])
 
   useEffect(() => {
 
-    setItems(collectibles.map((item: any, i: number)=> {
-      return <div className="grid-item" onClick={() => {
-        if(localStorage.getItem('pkey')! != null){
-          setSelected(i)
-        } else {
-          props.setNav(1)
-        }
+    // if(!init && collectibles.length >= 12 ){
+      setItems(collectibles.map((item: any, i: number)=> {
+        // let temp;
+        // temp = item
+        // setZoom(item)
+        return <div className={`grid-item`} onClick={() => {
+          if(localStorage.getItem('pkey')! != null){
+            if(enabled[i] == 1 ){
+              setSelected(i)
 
-      }}><img className='item' src={item}/></div>
-    }))
-    console.log(props.id)
-  }, [])
+            }
+          } else {
+            props.setNav(1)
+          }
+
+        }}>
+          <>
+        { 
+          enabled[i] == 1 
+          ? (
+            <img className='item' src={item}
+              onMouseLeave={() => {
+                const tempArray = collectibles
+                // tempArray[i] = blackout
+                // setCollectibles(tempArray)
+            }} 
+            onMouseEnter={()=> {
+              const tempArray = collectibles
+              // tempArray[i] = noise
+              // tempArray[i] = blackout
+              // setCollectibles(tempArray)
+            }}
+            />
+        )
+        : (
+          <img className={`item`} src={item}
+            onMouseLeave={() => {
+            const tempArray = collectibles
+            if(enabled[i] == 2)
+              tempArray[i] = whiteout
+            else
+             tempArray[i] = blackout
+
+            setCollectibles(tempArray)
+            setHovering(false)
+          }} 
+          onMouseEnter={()=> {
+
+            const tempArray = collectibles
+            try {
+              if(enabled[i] == 0){
+                throw new Error(i.toString())
+              } 
+              tempArray[i] = collectiblesOld[i]
+              setCollectibles(tempArray)
+              setHovering(true)
+            }catch(err){
+              tempArray[i] = noise
+              setCollectibles(tempArray)
+            }
+          }}
+          />
+      ) }
+        </>
+          </div>
+      }))
+      // setInit(true)
+    // }
+
+  }, [collectibles, items])
 
   const checkOut = async () => {
     setCheckedOut(true)

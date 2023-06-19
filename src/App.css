@@ -177,3 +177,7 @@ textarea {
   margin: auto; /* Adjust the margin as needed */
   width: 400px
 }
+
+.friendly {
+  filter: invert(100%);
+}
