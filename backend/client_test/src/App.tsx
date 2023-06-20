@@ -37,7 +37,7 @@ function App() {
 
       const res1 = await fetch('http://localhost:4000/testImage')
       const json: any = await res1.json()
-
+      console.log(json)
       const publicKey = JSON.parse(localStorage.getItem('pkey')!).publicKey
 
       const privateKey = await openpgp.decryptKey({
@@ -50,7 +50,7 @@ function App() {
         verificationKeys: publicKey,
         decryptionKeys: privateKey
       })).data;
-
+      console.log(rawData)
         // Create a data URL for the decrypted image
         const decryptedUrl = URL.createObjectURL(new Blob([Buffer.from(JSON.parse(rawData as string).data)], { type: 'image/png' }));
         console.log(decryptedUrl)
