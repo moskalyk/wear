@@ -19,6 +19,19 @@ import img9 from './imgs/9.png'
 import img10 from './imgs/10.png'
 import img11 from './imgs/11.png'
 
+import img_0 from './imgs/collection_2/0.png'
+import img_1 from './imgs/collection_2/1.png'
+import img_2 from './imgs/collection_2/2.png'
+import img_3 from './imgs/collection_2/3.png'
+import img_4 from './imgs/collection_2/4.png'
+import img_5 from './imgs/collection_2/5.png'
+import img_6 from './imgs/collection_2/6.png'
+import img_7 from './imgs/collection_2/7.png'
+import img_8 from './imgs/collection_2/8.png'
+import img_9 from './imgs/collection_2/9.png'
+import img_10 from './imgs/collection_2/10.png'
+import img_11 from './imgs/collection_2/11.png'
+
 import * as openpgp from 'openpgp';
 
 import noise from './static_noise.gif'
@@ -36,6 +49,7 @@ import {random} from './treenames'
 const provider = new ethers.providers.JsonRpcProvider('https://nodes.sequence.app/mumbai')
 
 const Footer = (props: any) => {
+  const {theme, setTheme} = useTheme()
   const [collections, setCollections] = useState<any>([])
   const [collectionView, setCollectionView] = useState<any>('')
   const seeCollection = (id: string) => {
@@ -44,7 +58,7 @@ const Footer = (props: any) => {
   useEffect(() => {
     const collectionsRes = ['#0001', '#0002', ]
     collectionsRes.map((id: string) => {
-      setCollections((prev: any) => [...prev, <p className='footer-collection' onClick={() => {console.log('testing');props.setId(id);props.setNav(3)}}>&nbsp; • &nbsp;{id}</p>])
+      setCollections((prev: any) => [...prev, <p className='footer-collection' onClick={() => {if(id == '#0001') {setTheme('dark');}console.log('testing');props.setId(id);props.setNav(3)}}>&nbsp; • &nbsp;{id}</p>])
     })
   }, [])
 
@@ -67,6 +81,8 @@ const getMetaDataFromTokenID = async (baseURL: string, tokenID: number) => {
 
 let do_ = true; // singing
 const collectiblesOld: any = [img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11]
+const collectiblesNew: any = [img_0,img_1,img_2,img_3,img_4,img_5,img_6,img_7,img_8,img_9,img_10,img_11]
+
 // let enabled = [0,1,2,2,0,2,0,1,0,2,1,0] // 0=seen,1=friendly,2=noise 
 let enabled: any = [] // 0=seen,1=friendly,2=noise 
 
@@ -86,6 +102,7 @@ const checkForDecryptable = async (encryptedMaybe: any) => {
 }
 
 const Collection = (props: any) => {
+  const {theme, setTheme} = useTheme()
   const [items, setItems] = useState([])
   const [selected, setSelected] = useState<any>(null)
   const [collectibles, setCollectibles]: any = useState<any>([]);
@@ -95,38 +112,48 @@ const Collection = (props: any) => {
   const [loading, setLoading] = useState<any>(false)
 
   const getMetadata = async () => {
-    const contractAddress = '0x99AB4d7B127311072e5D159BB30BDf20669aA1a4'
-    const contract = new ethers.Contract(contractAddress, abi, provider);
-    const metadata_old = await contract.tokenURI(0)
-    const NFTs = 12;
-    // // get new metadata CID hash
-    const priorMetadata = removeLastFiveChars(metadata_old);
-    let collectiblesNu: any = []
-    for(let i = 0; i< 12; i++){
-      const plaintext = await getMetaDataFromTokenID(priorMetadata,i)
-      try{
-        console.log(plaintext.image.substring(0, 3))
-        if(plaintext.image.substring(0, 3) == 'htt'){
-          enabled.push(1)
-          collectiblesNu.push(collectiblesOld[i])
-        } else{
-          const isEncrypted = await checkForDecryptable(plaintext.image)
-          enabled.push(2)
-          collectiblesNu.push(collectiblesOld[i])
+    if(props.id != '#0002'){
+
+      const contractAddress = '0x99AB4d7B127311072e5D159BB30BDf20669aA1a4'
+      const contract = new ethers.Contract(contractAddress, abi, provider);
+      const metadata_old = await contract.tokenURI(0)
+      const NFTs = 12;
+      console.log('COMING IN HERE')
+      // // get new metadata CID hash
+      const priorMetadata = removeLastFiveChars(metadata_old);
+      let collectiblesNu: any = []
+      for(let i = 0; i< 12; i++){
+        const plaintext = await getMetaDataFromTokenID(priorMetadata,i)
+        try{
+          console.log(plaintext.image.substring(0, 3))
+          if(plaintext.image.substring(0, 3) == 'htt'){
+            enabled.push(1)
+            collectiblesNu.push(collectiblesOld[i])
+          } else{
+            const isEncrypted = await checkForDecryptable(plaintext.image)
+            enabled.push(2)
+            collectiblesNu.push(collectiblesOld[i])
+          }
+        }catch(err){
+          enabled.push(0)
+          collectiblesNu.push(blackout)
         }
-      }catch(err){
-        enabled.push(0)
-        collectiblesNu.push(blackout)
       }
+
+      setCollectibles(collectiblesNu.map((collectible: any, i: any) => {
+        if(enabled[i] == 1) return collectible
+        else if(enabled[i] == 2) return whiteout
+        else return blackout
+      }))
+    } else {
+      const enabled = [1,1,1,1,1,1,1,1,1,1,1,1]
+      setTheme('light')
+      setCollectibles(collectiblesNew.map((collectible: any, i: any) => {
+        if(enabled[i] == 1) return collectible
+        else if(enabled[i] == 2) return whiteout
+        else return blackout
+      }))
     }
-
-
-
-    setCollectibles(collectiblesNu.map((collectible: any, i: any) => {
-      if(enabled[i] == 1) return collectible
-      else if(enabled[i] == 2) return whiteout
-      else return blackout
-    }))
   }
 
   useEffect(() => {
@@ -149,10 +176,11 @@ const Collection = (props: any) => {
         }}>
           <>
         { 
-          enabled[i] == 1 
+          enabled[i] == 1
           ? (
             <img className='item' src={item}
               onMouseLeave={() => {
+                console.log('item')
             }} 
             onMouseEnter={()=> {
             }}
@@ -161,13 +189,14 @@ const Collection = (props: any) => {
         : (
           <img className={`item`} src={item}
             onMouseLeave={() => {
+              
             const tempArray = collectibles
             if(enabled[i] == 2)
               tempArray[i] = whiteout
-            else
+            else if(props.id != '#0002')
              tempArray[i] = blackout
 
-            setCollectibles(tempArray)
+            if(props.id != '#0002') setCollectibles(tempArray)
             setHovering(false)
           }} 
           onMouseEnter={()=> {
@@ -177,12 +206,19 @@ const Collection = (props: any) => {
               if(enabled[i] == 0){
                 throw new Error(i.toString())
               } 
-              tempArray[i] = collectiblesOld[i]
-              setCollectibles(tempArray)
-              setHovering(true)
+              console.log('two')
+
+              if(props.id != '#0002') {
+                console.log('two')
+                tempArray[i] = collectiblesOld[i]
+                setCollectibles(tempArray)
+                setHovering(true)
+              }
             }catch(err){
-              tempArray[i] = noise
-              setCollectibles(tempArray)
+              if(props.id != '#0002') {
+                tempArray[i] = noise
+                setCollectibles(tempArray)
+              }
             }
           }}
           />
@@ -222,7 +258,8 @@ const Collection = (props: any) => {
       <br/>
       <br/>
       <Box>
-        <span style={{cursor: 'pointer'}}onClick={() => props.setNav(1)}>🛡</span> / collection / {props.id}
+     
+        <span style={{cursor: 'pointer'}}onClick={() => { setTheme('dark');props.setNav(1)}}>🛡</span> / collection / {props.id}
       </Box>
       <br/>
       <br/>
@@ -231,7 +268,7 @@ const Collection = (props: any) => {
         {items}
       </div>
       <br/>
-      <img src={'https://docs.sequence.xyz/img/icons/sequence-composite-dark.svg'}/>
+      { theme == 'dark' ? <img src={'https://docs.sequence.xyz/img/icons/sequence-composite-dark.svg'}/> : <img src="https://docs.sequence.xyz/img/icons/sequence-composite-light.svg"/> }
       <br/>
       <br/>
       {
@@ -250,6 +287,7 @@ const Collection = (props: any) => {
 }
 
 const Landing = (props: any) => {
+  const {theme, setTheme} = useTheme()
 
   const login = async () => {
     const wallet = sequence.getWallet()
@@ -278,7 +316,8 @@ const Landing = (props: any) => {
       <br/>
       <br/>
       <br/>
-      <img src={hanger} className='landing'/>
+      {theme == 'dark' ? null : <><br/><br/><br/><br/><br/></> }
+      {theme == 'dark' ? <img src={hanger} className='landing'/> : null }
       <h1 className='title'>wear</h1>
       <br/>
       <p className='sub-title'>private collectible fashion</p>
@@ -487,7 +526,7 @@ const OpenPGP = (props: any) => {
 }
 
 function App() {
-  const [id, setId] = useState<any>('#0001')
+  const [id, setId] = useState<any>('')
   const [nav, setNav] = useState<any>(1)
   const [isLoggedIn, setIsLoggedIn] = useState<any>(false)
   const [address, setAddress] = useState<any>(null)
